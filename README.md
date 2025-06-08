@@ -40,14 +40,17 @@ You can schedule this command to run automatically every day at midnight using c
 ```bash
 crontab -e
 ```
+
 2. Add this line to run the reset command daily at midnight:
 ```bash
 0 0 * * * /path/to/craft store-view/reset-view >/dev/null 2>&1
-
 ```
 Make sure to replace /path/to/craft with the full path to your Craft CMS craft executable.
+
+
 3. Save and exit the editor.
-This will reset your view counts daily at 00:00 server time without any output logged.
+
+This will reset your view counts daily at 00:00 server time.
 
 ---
 
