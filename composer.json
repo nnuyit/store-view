@@ -1,6 +1,7 @@
 {
     "name": "nelson-nguyen/craft-store-view",
     "description": "Craft CMS Track total/day/week/month views per element.",
+    "version": "1.0.0",
     "type": "craft-plugin",
     "license": "proprietary",
     "support": {
