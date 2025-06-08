@@ -11,7 +11,7 @@
         "rss": "https://github.com/nnuyit/store-view/releases.atom"
     },
     "require": {
-        "php": ">=8.2",
+        "php": ">=8.0",
         "craftcms/cms": "^5.0 || ^4.3.5",
         "jaybizzle/crawler-detect": "^1.3"
     },
@@ -39,7 +39,7 @@
     "config": {
         "sort-packages": true,
         "platform": {
-            "php": "8.2"
+            "php": "8.0"
         },
         "allow-plugins": {
             "yiisoft/yii2-composer": true,
