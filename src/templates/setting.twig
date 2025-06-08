@@ -1,0 +1,10 @@
+{% import '_includes/forms' as forms %}
+{{
+    forms.textareaField({
+        label: 'Exclude IP addresses',
+        instructions: 'One IP address per line to ignore them when incrementing counts',
+        name: 'ignoreIps',
+        value: settings.ignoreIps,
+        rows: 5
+    })
+}}

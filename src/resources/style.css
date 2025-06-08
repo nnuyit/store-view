@@ -1,0 +1,7 @@
+.pagination .item {
+    padding: 5px 10px;
+    border: 1px solid;
+    border-radius: 4px;
+    text-align: center;
+    display: inline-block;
+}

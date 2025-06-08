@@ -1,0 +1,49 @@
+{
+    "name": "nelson-nguyen/craft-store-view",
+    "description": "Craft CMS Track total/day/week/month views per element.",
+    "type": "craft-plugin",
+    "license": "proprietary",
+    "support": {
+        "email": "nnuyit@gmail.com",
+        "issues": "https://github.com/nnuyit/store-view/issues?state=open",
+        "source": "https://github.com/nnuyit/store-view",
+        "docs": "https://github.com/nnuyit/store-view",
+        "rss": "https://github.com/nnuyit/store-view/releases.atom"
+    },
+    "require": {
+        "php": ">=8.2",
+        "craftcms/cms": "^5.0 || ^4.0.0.1",
+        "jaybizzle/crawler-detect": "^1.3"
+    },
+    "require-dev": {
+        "craftcms/ecs": "dev-main",
+        "craftcms/phpstan": "dev-main"
+    },
+    "autoload": {
+        "psr-4": {
+            "nelsonnguyen\\craftstoreview\\": "src/"
+        }
+    },
+    "extra": {
+        "handle": "store-view",
+        "name": "Store View",
+        "developer": "Nelson Nguyen",
+        "documentationUrl": "https://github.com/nnuyit/store-view",
+        "class": "nelsonnguyen\\craftstoreview\\StoreView"
+    },
+    "scripts": {
+        "check-cs": "ecs check --ansi",
+        "fix-cs": "ecs check --ansi --fix",
+        "phpstan": "phpstan --memory-limit=1G"
+    },
+    "config": {
+        "sort-packages": true,
+        "platform": {
+            "php": "8.2"
+        },
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true,
+            "craftcms/plugin-installer": true
+        }
+    }
+}

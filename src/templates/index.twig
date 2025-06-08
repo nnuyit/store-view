@@ -1,0 +1,264 @@
+{% extends '_layouts/cp' %}
+{% set title = 'Store View'|t('store-view') %}
+{% set siteOb = craft.app.sites.getSiteByHandle(site) %}
+{% block contextMenu %}
+    {% include "_elements/sitemenu" with {
+        selectedSiteId: siteOb.id,
+        urlFormat: cpUrl("store-view?" ~ craft.app.request.queryString, {site: '{handle}'})
+    } %}
+{% endblock %}
+
+
+{% set headers = [
+    {
+        name: 'Element',
+        field: 'elementId'
+    },
+    {
+        name: 'Element Type',
+        field: 'type'
+    },
+    {
+        name: 'URI',
+        field: 'uri'
+    },
+    {
+        name: 'Total',
+        field: 'total'
+    },
+    {
+        name: 'Day',
+        field: 'day'
+    },
+    {
+        name: 'Week',
+        field: 'week'
+    },
+    {
+        name: 'Month',
+        field: 'month'
+    },
+    {
+        name: 'Last Viewed',
+        field: 'lastUpdated'
+    },
+    {
+        name: 'Delete',
+        field: 'delete'
+    },
+    {
+        name: 'Reset',
+        field: 'reset'
+    }
+] %}
+{% set filters = [
+    {
+        name: 'All',
+        value: 'all'
+    },
+    {
+        name: 'Today',
+        value: 'today'
+    },
+    {
+        name: 'This Week',
+        value: 'thisWeek'
+    },
+    {
+        name: 'This Month',
+        value: 'thisMonth'
+    }
+] %}
+
+{% block content %}
+    {% import '_includes/forms' as forms %}
+    <h2 style="padding-bottom: 10px;">
+        Result {{ pagination.total }} {{ pagination.total > 1 ? 'items' : 'item' }}
+    </h2>
+    {% set filterInput %}
+        <div class="select">
+            <select id="dateRange"
+                name="dateRange"
+                onchange="handleFilter(this)">
+                {% for item in filters %}
+                    <option value="{{ item.value }}"
+                        {{ range == item.value ? 'selected' }}>
+                        {{ item.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    {% endset %}
+    <div style="padding-bottom: 40px;">
+        {{
+            forms.field(
+                {
+                    label: 'Filter',
+                    id: 'filter'
+                },
+                filterInput
+            )
+        }}
+    </div>
+    {% if rows|length %}
+        <div class="tablepane">
+            <table class="data fullwidth">
+                <thead>
+                    <tr>
+                        {% for header in headers %}
+                            {% if header.field in ['delete', 'reset'] %}
+                                <th></th>
+                            {% else %}
+                                <th class="{{
+                                    header.field
+                                        not in ['elementId', 'uri', 'type']
+                                        ? 'centeralign'
+                                    }}">
+                                    <a href="?site={{ site }}&sort={{
+                                        header.field
+                                        }}&order={{
+                                        sort == header.field and order == 'asc'
+                                            ? 'desc'
+                                            : 'asc'
+                                        }}&range={{ range }}">
+                                        {{ header.name|t('store-view') }}
+                                    </a>
+
+                                    {% if
+                                        order == 'asc'
+                                            and sort == header.field %}
+                                        <span class="sort-icon"
+                                            style="color: var(--link-color);">
+                                            &uarr;
+                                        </span>
+                                    {% elseif
+                                        order == 'desc'
+                                            and sort == header.field %}
+                                        <span class="sort-icon"
+                                            style="color: var(--link-color);">
+                                            &darr;
+                                        </span>
+                                    {% endif %}
+                                </th>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in rows %}
+                        <tr>
+                            <td class="">
+                                {% if row.element and row.element.cpEditUrl %}
+                                    <a href="{{ row.element.cpEditUrl }}">
+                                        {{ row.element.title }}
+                                    </a>
+                                {% elseif row.element %}
+                                    {{ row.element.title }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="">
+                                {{ row.element.type ?? '-' }}
+                            </td>
+                            <td class="">
+                                {% if
+                                    row.element is not null
+                                        and row.element.uri is not null %}
+                                    <a href="{{
+                                        siteOb.baseUrl
+                                            ~ (row.element.uri|trim(
+                                                '/',
+                                                'left'
+                                            ))
+                                        }}"
+                                        target="_blank"
+                                        rel="noopener noreferrer">
+                                        {{ row.element.uri }}
+                                    </a>
+                                {% else %}
+                                    {{ row.uri }}
+                                {% endif %}
+                                {# {{ row.uri ?? row.element.uri }} #}
+                            </td>
+                            <td class="centeralign">
+                                {{ row.total }}
+                            </td>
+                            <td class="centeralign">
+                                {{ row.day }}
+                            </td>
+                            <td class="centeralign">
+                                {{ row.week }}
+                            </td>
+                            <td class="centeralign">
+                                {{ row.month }}
+                            </td>
+                            <td class="centeralign">
+                                {{ row.lastUpdated|date('F j, Y h:i:s A') }}
+                            </td>
+                            <td class="centeralign">
+                                <form method="post"
+                                    action="{{
+                                    cpUrl(
+                                        'store-view/reset/' ~ row.id
+                                    )
+                                    }}"
+                                    onsubmit="return confirm('Are you sure you want to reset this record?');">
+                                    {{ csrfInput() }}
+                                    {{
+                                        redirectInput(
+                                            'store-view?'
+                                                ~ craft.app.request.queryString
+                                        )
+                                    }}
+                                    <button type="submit" class="btn">
+                                        Reset
+                                    </button>
+                                </form>
+                            </td>
+                            <td class="centeralign">
+                                <form method="post"
+                                    action="{{
+                                    cpUrl(
+                                        'store-view/delete/' ~ row.id
+                                    )
+                                    }}"
+                                    onsubmit="return confirm('Are you sure you want to delete this record?');">
+                                    {{ csrfInput() }}
+                                    {{
+                                        redirectInput(
+                                            'store-view?'
+                                                ~ craft.app.request.queryString
+                                        )
+                                    }}
+                                    <button type="submit" class="btn submit">
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% set totalPages =
+            (pagination.total / pagination.perPage)|round(0, 'ceil')
+        %}
+        <div class="pagination" style="padding-top: 20px;">
+            {% for i in 1..totalPages %}
+                {% if i == pagination.currentPage %}
+                    <strong class="item">{{ i }}</strong>
+                {% else %}
+                    <a class="item"
+                        href="?site={{ site }}&page={{ i }}&sort={{
+                        sort
+                        }}&order={{ order }}&range={{ range }}">
+                        {{ i }}
+                    </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% else %}
+        {{ 'No entries' }}
+    {% endif %}
+{% endblock %}
