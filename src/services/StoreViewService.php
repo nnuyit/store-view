@@ -4,7 +4,6 @@ namespace nelsonnguyen\craftstoreview\services;
 
 use Craft;
 use craft\base\Component;
-use craft\elements\Entry;
 use craft\helpers\Db;
 use Jaybizzle\CrawlerDetect\CrawlerDetect;
 use nelsonnguyen\craftstoreview\queries\StoreViewQuery;
