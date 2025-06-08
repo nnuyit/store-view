@@ -25,6 +25,32 @@ Search for "Store View" in the [Craft Plugin Store](https://plugins.craftcms.com
 
 ---
 
+## 🧹 Reset Views Command
+To clear all stored view counts (total, daily, weekly, monthly), run the following console command manually:
+```bash
+./craft store-view/reset-view
+```
+
+---
+
+## ⏰ Automate with Cron Job
+You can schedule this command to run automatically every day at midnight using cron.
+
+1. Open your server's crontab editor:
+```bash
+crontab -e
+```
+2. Add this line to run the reset command daily at midnight:
+```bash
+0 0 * * * /path/to/craft store-view/reset-view >/dev/null 2>&1
+
+```
+Make sure to replace /path/to/craft with the full path to your Craft CMS craft executable.
+3. Save and exit the editor.
+This will reset your view counts daily at 00:00 server time without any output logged.
+
+---
+
 ## 🔢 Count Views
 
 Manually trigger a view count for any supported element or custom URI:
