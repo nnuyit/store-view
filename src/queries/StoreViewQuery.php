@@ -150,10 +150,6 @@ class StoreViewQuery
     public function all(): array
     {
 
-        // echo "<pre>";
-        // var_dump($this->query->createCommand()->sql);
-        // echo "</pre>";
-        // die('123123');
         $rows = $this->query->all();
         $res = array_map([self::class, 'formatData'], $rows);
         return $res;

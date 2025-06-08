@@ -2,10 +2,13 @@
 {% set title = 'Store View'|t('store-view') %}
 {% set siteOb = craft.app.sites.getSiteByHandle(site) %}
 {% block contextMenu %}
-    {% include "_elements/sitemenu" with {
-        selectedSiteId: siteOb.id,
-        urlFormat: cpUrl("store-view?" ~ craft.app.request.queryString, {site: '{handle}'})
-    } %}
+    {% if craft.app.getIsMultiSite() %}
+        {% include "_elements/sitemenu" with {
+            selectedSiteId: siteOb.id,
+            urlFormat: cpUrl("store-view?" ~ craft.app.request.queryString, {site: '{handle}'})
+        } %}
+    {% endif %}
+    
 {% endblock %}
 
 

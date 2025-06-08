@@ -6,9 +6,9 @@ use Craft;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
 use nelsonnguyen\craftstoreview\assetbundles\StoreViewBundle;
-use nelsonnguyen\craftstoreview\queries\StoreViewQuery;
 use nelsonnguyen\craftstoreview\records\StoreViewRecord;
 use nelsonnguyen\craftstoreview\StoreView;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 /**
@@ -31,7 +31,7 @@ class StoreViewController extends Controller
             : Craft::$app->getSites()->getCurrentSite();
 
         if (!$site) {
-            throw new \yii\web\NotFoundHttpException("Site not found");
+            throw new NotFoundHttpException("Site not found");
         }
 
         $page = (int)$request->getParam('page', 1);
@@ -65,11 +65,6 @@ class StoreViewController extends Controller
             return $this->redirect($url);
         }
         $this->view->registerAssetBundle(StoreViewBundle::class);
-
-        // echo "<pre>";
-        // var_dump($siteParam);
-        // echo "</pre>";
-        // die('123123');
         return $this->renderTemplate('store-view/index', [
             'rows' => $rows,
             'pagination' => [
@@ -91,7 +86,7 @@ class StoreViewController extends Controller
         $record = StoreViewRecord::findOne($id);
 
         if (!$record) {
-            throw new \yii\web\NotFoundHttpException("Store view record not found.");
+            throw new NotFoundHttpException("Store view record not found.");
         }
         $record->delete();
 
@@ -107,15 +102,13 @@ class StoreViewController extends Controller
         $record = StoreViewRecord::findOne($id);
 
         if (!$record) {
-            throw new \yii\web\NotFoundHttpException("Store view record not found.");
+            throw new NotFoundHttpException("Store view record not found.");
         }
         $record->total = 0;
         $record->day = 0;
         $record->week = 0;
         $record->month = 0;
         $record->save();
-        // $record->delete();
-
         Craft::$app->getSession()->setNotice('Record reset.');
 
         return $this->redirectToPostedUrl();
